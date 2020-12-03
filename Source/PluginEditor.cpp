@@ -19,6 +19,11 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
     // editor's size to whatever you need it to be.
     setSize (600, 200);
 
+    dampAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, DAMP_ID, dampningSlider);
+    stereoAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, STEREO_ID, stereoSlider);
+    impAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, IMP_ID, impulseFilterSlider);
+
+
     //setting up ui componenets
     Image fingerNP = ImageCache::getFromMemory(BinaryData::finger_png, BinaryData::finger_pngSize);
     Image fingerP = ImageCache::getFromMemory(BinaryData::finger_press_png, BinaryData::finger_press_pngSize);
@@ -87,6 +92,11 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
     addAndMakeVisible(impulseFilterSlider);
     addAndMakeVisible(dampningSlider);
     addAndMakeVisible(stereoSlider);
+
+    //impulseFilterSlider.setValue(processor.globalSettings.impulseFilt);
+    //stereoSlider.setValue(processor.globalSettings.stereo);
+    //dampningSlider.setValue(processor.globalSettings.dampning);
+
 
 
     backGround = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
@@ -167,8 +177,7 @@ void Karplus_finalAudioProcessorEditor::changeImpulse(impulseState impulse)
         fingerB.setEnabled(false);
          
         processor.globalSettings.impulse = 1;
-
-
+        //processor.ValueTree::setProperty(BUTTON_ID, 0.0f);
         break;
 
     case stick:

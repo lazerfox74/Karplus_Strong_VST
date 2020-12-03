@@ -13,6 +13,27 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "customLookAndFeel.h"
+
+#define DAMP_ID "damp"
+#define DAMP_NAME "Dampening"
+
+#define IMP_ID "impulse"
+#define IMP_NAME "Impulse Filter"
+
+#define STEREO_ID "stereo"
+#define STEREO_NAME "Stereo"
+
+#define PICK_ID "pick"
+#define PICK_NAME "Pick"
+
+#define FINGER_ID "pick"
+#define FINGER_NAME "Pick"
+
+#define STICK_ID "stick"
+#define STICK_NAME "Stick"
+
+#define BUTTON_ID "buttons"
+#define BUTTON_NAME "Buttons"
 //==============================================================================
 /**
 */
@@ -51,6 +72,20 @@ private:
         void changeImpulse(impulseState impulse);
 
         Slider impulseFilterSlider, dampningSlider, stereoSlider;
+
+        ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>dampAttatch;
+        ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>impAttatch;
+        ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>stereoAttatch;
+
+        //ScopedPointer<AudioProcessorValueTreeState::Butt>buttonAttatch;
+        //ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment>fingerAttatch;
+        //ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment>stickAttatch;
+
+
+
+
+
+
 
         customLookAndFeel otherLookAndFeel;
 };

@@ -62,6 +62,8 @@ public:
 
     Settings globalSettings;
 
+    juce::AudioProcessorValueTreeState parameters;
+
 
 
 private:
@@ -69,5 +71,8 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Karplus_finalAudioProcessor)
 
     Synthesiser synth;
+
+
+
 
 };

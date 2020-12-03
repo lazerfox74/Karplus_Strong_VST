@@ -21,28 +21,22 @@ Karplus_finalAudioProcessor::Karplus_finalAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+    parameters(*this,nullptr)
 #endif
 {
+    NormalisableRange<float> dampRange(0.01f, 10.0f);
+    NormalisableRange<float> steroRange(1.0f, 1.3f);
+    NormalisableRange<float> impRange(200.0f, 15000.0f);
 
-    ////readAudioFile(pluckBuffer, BinaryData::pick_wav, BinaryData::pick_wavSize);
+    parameters.createAndAddParameter(DAMP_ID, DAMP_NAME, DAMP_NAME, dampRange, 0.5f, nullptr, nullptr);
+    parameters.createAndAddParameter(STEREO_ID, STEREO_NAME, STEREO_NAME, steroRange, 1.3f, nullptr, nullptr);
+    parameters.createAndAddParameter(IMP_ID, IMP_NAME, IMP_NAME, impRange, 500.0f, nullptr, nullptr);
 
-    //the one
-
-    //MemoryInputStream inputStream(BinaryData::finger_wav, BinaryData::finger_wavSize, false);
-    //WavAudioFormat wavFormat;
-    //std::unique_ptr<AudioFormatReader> reader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::finger_wav,BinaryData::finger_wavSize, false), true));
-    //myData.pluckBuffer.setSize(reader->numChannels, reader->lengthInSamples);
-    //reader->read(&myData.pluckBuffer, 0, reader->lengthInSamples, 0, true, true);
-
-    //MemoryInputStream inputStream(BinaryData::pick_wav, BinaryData::pick_wavSize, false);
-    //std::unique_ptr<AudioFormatReader> reader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::finger_wav, BinaryData::finger_wavSize, false), true));
-    //pickBuffer.setSize(reader->numChannels, reader->lengthInSamples);
-    //reader->read(&pickBuffer, 0, reader->lengthInSamples, 0, true, true);
-    
+    parameters.createAndAddParameter(BUTTON_ID, BUTTON_NAME, BUTTON_NAME, { 0.0f, 1.0f }, 0.0f, nullptr, nullptr,false,false);
 
 
-    //readAudioFile(pluckBuffer, BinaryData::pick_wav, BinaryData::pick_wavSize);
+    parameters.state = ValueTree("savedParams");
 
     synth.clearVoices();
 
@@ -210,12 +204,24 @@ void Karplus_finalAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    std::unique_ptr <juce::XmlElement> xmlState(parameters.state.createXml());
+    copyXmlToBinary(*xmlState, destData);
+  
+
 }
 
 void Karplus_finalAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> theParams(getXmlFromBinary(data, sizeInBytes));
+    if (theParams != nullptr)
+    {
+        if (theParams->hasTagName(parameters.state.getType()))
+        {
+            parameters.state = ValueTree::fromXml(*theParams);
+        }
+    }
 }
 
 //==============================================================================
