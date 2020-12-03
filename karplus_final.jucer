@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="xq4eMk" name="karplus_final" projectType="audioplug" jucerVersion="5.4.7"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              pluginName="peng string" pluginManufacturer="death swamp">
+  <MAINGROUP id="vzl6te" name="karplus_final">
+    <GROUP id="{CB599CAB-36E1-ADDF-CBE6-D72D9629176C}" name="Source">
+      <FILE id="Oo1Xhy" name="OnePole.cpp" compile="1" resource="0" file="Source/OnePole.cpp"/>
+      <FILE id="x2KAPN" name="OnePole.h" compile="0" resource="0" file="Source/OnePole.h"/>
+      <FILE id="daUFMz" name="customLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/customLookAndFeel.cpp"/>
+      <FILE id="DVFBIh" name="customLookAndFeel.h" compile="0" resource="0"
+            file="Source/customLookAndFeel.h"/>
+      <FILE id="oNVNJ7" name="Delay.cpp" compile="1" resource="0" file="Source/Delay.cpp"/>
+      <FILE id="OxL9hO" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
+      <FILE id="V7TWsz" name="settings.cpp" compile="1" resource="0" file="Source/settings.cpp"/>
+      <FILE id="eQPsSs" name="settings.h" compile="0" resource="0" file="Source/settings.h"/>
+      <FILE id="wT68N5" name="SynthSound.cpp" compile="1" resource="0" file="Source/SynthSound.cpp"/>
+      <FILE id="S8Vdts" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="YRXKfB" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="KkyhLl" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <GROUP id="{8FBACD84-E44C-78E7-641D-862B1C4CB49A}" name="resources">
+        <FILE id="qcx5cB" name="finger.wav" compile="0" resource="1" file="../finger.wav"/>
+        <FILE id="F31r5a" name="pick.wav" compile="0" resource="1" file="../pick.wav"/>
+        <FILE id="mNeQv3" name="stick.wav" compile="0" resource="1" file="../stick.wav"/>
+        <FILE id="iZ6kHr" name="background.png" compile="0" resource="1" file="../background.png"/>
+        <FILE id="SpBnrH" name="dial.png" compile="0" resource="1" file="../dial.png"/>
+        <FILE id="vwdK1Q" name="finger.png" compile="0" resource="1" file="../finger.png"/>
+        <FILE id="b4kkbE" name="finger_press.png" compile="0" resource="1"
+              file="../finger_press.png"/>
+        <FILE id="tkV0Ng" name="pick.png" compile="0" resource="1" file="../pick.png"/>
+        <FILE id="oHgMEx" name="pick_press.png" compile="0" resource="1" file="../pick_press.png"/>
+        <FILE id="zAfuDy" name="press.png" compile="0" resource="1" file="../press.png"/>
+        <FILE id="wrtpP9" name="stick.png" compile="0" resource="1" file="../stick.png"/>
+        <FILE id="SHF1WZ" name="stick_press.png" compile="0" resource="1" file="../stick_press.png"/>
+      </GROUP>
+      <FILE id="n7pNQh" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="jlg1GR" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="jTB5Dq" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="YgfsSg" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>
