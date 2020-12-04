@@ -21,10 +21,11 @@ struct Settings
     enum enumImpulse{pick,finger,stick};
     enumImpulse impulses;
 
-    char impulse{0};
+    char impulse{2};
 
-    float dampning{0.4};
+    float dampning{5.0};
     double stereo{1};
-    float impulseFilt{50};
+    float freqDamp{0.4};
+    float impulseFilt{200};
 
 };

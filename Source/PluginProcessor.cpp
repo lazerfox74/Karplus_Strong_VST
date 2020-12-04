@@ -28,12 +28,13 @@ Karplus_finalAudioProcessor::Karplus_finalAudioProcessor()
     NormalisableRange<float> dampRange(0.01f, 10.0f);
     NormalisableRange<float> steroRange(1.0f, 1.3f);
     NormalisableRange<float> impRange(200.0f, 15000.0f);
+    NormalisableRange<float> freqDampRange(0.1f, 0.99f);
 
-    parameters.createAndAddParameter(DAMP_ID, DAMP_NAME, DAMP_NAME, dampRange, 0.5f, nullptr, nullptr);
-    parameters.createAndAddParameter(STEREO_ID, STEREO_NAME, STEREO_NAME, steroRange, 1.3f, nullptr, nullptr);
-    parameters.createAndAddParameter(IMP_ID, IMP_NAME, IMP_NAME, impRange, 500.0f, nullptr, nullptr);
 
-    parameters.createAndAddParameter(BUTTON_ID, BUTTON_NAME, BUTTON_NAME, { 0.0f, 1.0f }, 0.0f, nullptr, nullptr,false,false);
+    parameters.createAndAddParameter(DAMP_ID, DAMP_NAME, DAMP_NAME, dampRange, 5.0f, nullptr, nullptr);
+    parameters.createAndAddParameter(STEREO_ID, STEREO_NAME, STEREO_NAME, steroRange, 1.0f, nullptr, nullptr);
+    parameters.createAndAddParameter(IMP_ID, IMP_NAME, IMP_NAME, impRange, 200.0f, nullptr, nullptr);
+    parameters.createAndAddParameter(FREQDAMP_ID, FREQDAMP_NAME, FREQDAMP_NAME, freqDampRange, 0.4f, nullptr, nullptr);
 
 
     parameters.state = ValueTree("savedParams");

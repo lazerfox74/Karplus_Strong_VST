@@ -20,11 +20,11 @@
       <FILE id="YRXKfB" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
       <FILE id="KkyhLl" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
       <GROUP id="{8FBACD84-E44C-78E7-641D-862B1C4CB49A}" name="resources">
+        <FILE id="zoEOxe" name="background.png" compile="0" resource="1" file="../background.png"/>
+        <FILE id="xFO1h5" name="dial.png" compile="0" resource="1" file="../dial.png"/>
         <FILE id="qcx5cB" name="finger.wav" compile="0" resource="1" file="../finger.wav"/>
-        <FILE id="F31r5a" name="pick.wav" compile="0" resource="1" file="../pick.wav"/>
+        <FILE id="nStjI7" name="pick.wav" compile="0" resource="1" file="../../../Music/File Transfer Folder/pick.wav"/>
         <FILE id="mNeQv3" name="stick.wav" compile="0" resource="1" file="../stick.wav"/>
-        <FILE id="iZ6kHr" name="background.png" compile="0" resource="1" file="../background.png"/>
-        <FILE id="SpBnrH" name="dial.png" compile="0" resource="1" file="../dial.png"/>
         <FILE id="vwdK1Q" name="finger.png" compile="0" resource="1" file="../finger.png"/>
         <FILE id="b4kkbE" name="finger_press.png" compile="0" resource="1"
               file="../finger_press.png"/>

@@ -30,9 +30,9 @@ public:
 
     float b{0.3}, a{ 1 - b }, z{ 0 }, f{ 1 };
 
-    float process(float in,float damp);
+    float process(float in,float damp,float freqDamp);
 
-    float delayLine(float sig,float damp);
+    float delayLine(float sig,float damp,float freqDamp);
 
     bool killDelay{ false };
 

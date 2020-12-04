@@ -101,7 +101,7 @@ void KarplusVoice::renderNextBlock(AudioBuffer<float>& outputBuffer, int startSa
             {
                 liveSample = 0.0;
             }
-            output = liveSample * level + voiceDelay[i].delayLine(liveSample, voiceSettings->dampning) * level;
+            output = liveSample * level + voiceDelay[i].delayLine(liveSample, voiceSettings->dampning,voiceSettings->freqDamp) * level;
 
             outputBuffer.addSample(i,startSample,(output));
 

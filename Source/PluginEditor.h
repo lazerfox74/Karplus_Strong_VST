@@ -34,6 +34,9 @@
 
 #define BUTTON_ID "buttons"
 #define BUTTON_NAME "Buttons"
+
+#define FREQDAMP_ID "freqDamp"
+#define FREQDAMP_NAME "Frequency Dampening"
 //==============================================================================
 /**
 */
@@ -71,11 +74,13 @@ private:
 
         void changeImpulse(impulseState impulse);
 
-        Slider impulseFilterSlider, dampningSlider, stereoSlider;
+        Slider impulseFilterSlider, dampningSlider, stereoSlider,freqDampSlider;
 
         ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>dampAttatch;
         ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>impAttatch;
         ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>stereoAttatch;
+        ScopedPointer<AudioProcessorValueTreeState::SliderAttachment>freqDampAttatch;
+
 
         //ScopedPointer<AudioProcessorValueTreeState::Butt>buttonAttatch;
         //ScopedPointer<AudioProcessorValueTreeState::ButtonAttachment>fingerAttatch;

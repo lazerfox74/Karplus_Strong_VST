@@ -8,20 +8,20 @@
 
 namespace BinaryData
 {
+    extern const char*   background_png;
+    const int            background_pngSize = 11949;
+
+    extern const char*   dial_png;
+    const int            dial_pngSize = 5257;
+
     extern const char*   finger_wav;
     const int            finger_wavSize = 65536;
 
     extern const char*   pick_wav;
-    const int            pick_wavSize = 65536;
+    const int            pick_wavSize = 70604;
 
     extern const char*   stick_wav;
     const int            stick_wavSize = 65536;
-
-    extern const char*   background_png;
-    const int            background_pngSize = 9972;
-
-    extern const char*   dial_png;
-    const int            dial_pngSize = 3372;
 
     extern const char*   finger_png;
     const int            finger_pngSize = 3411;

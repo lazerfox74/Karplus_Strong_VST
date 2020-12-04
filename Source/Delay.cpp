@@ -28,25 +28,26 @@ void myDelay::setDelay(int M)
 }
 
 //https://ccrma.stanford.edu/realsimple/faust_strings/One_Zero_String_Damping_Filter.html
-float myDelay::process(float in,float damp)
+float myDelay::process(float in,float damp,float freqDamp)
 {
 
     float rho = pow(0.001, 1 / (freq * damp));
-
+    a = 1 - freqDamp;
+    b = freqDamp;
     z = (in * a) + (z * b);
 
     return z * rho;
 }
 
 
-float myDelay::delayLine(float sig,float damp)
+float myDelay::delayLine(float sig,float damp,float freqDamp)
 {
     float oldSig;
 
 
     //delayArray[wptr++] = sig + process(delayArray[wptr],damp);
 
-    delayArray[wptr++] = sig + process(delayArray[wptr],damp);
+    delayArray[wptr++] = sig + process(delayArray[wptr],damp,freqDamp);
 
 
     //oldSig = (killDelay) ? 0 : delayArray[rptr++];

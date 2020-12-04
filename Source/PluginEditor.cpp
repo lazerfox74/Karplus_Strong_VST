@@ -17,11 +17,13 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (600, 200);
+    setSize (600, 225);
 
     dampAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, DAMP_ID, dampningSlider);
     stereoAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, STEREO_ID, stereoSlider);
     impAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, IMP_ID, impulseFilterSlider);
+    freqDampAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, FREQDAMP_ID, freqDampSlider);
+
 
 
     //setting up ui componenets
@@ -40,6 +42,12 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
     fingerB.setLookAndFeel(&otherLookAndFeel);
     stickB.setLookAndFeel(&otherLookAndFeel);
 
+    freqDampSlider.setLookAndFeel(&otherLookAndFeel);
+    freqDampSlider.setRange(0.1, 0.99);
+    freqDampSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
+    freqDampSlider.addListener(this);
+    addAndMakeVisible(freqDampSlider);
+    freqDampSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
 
 
     pickB.setImages(false, true, true, pickNP, 1.0f, {},press , 1.0f, {}, pickP, 1.0f, {});
@@ -152,6 +160,8 @@ void Karplus_finalAudioProcessorEditor::resized()
     dampningSlider.setBounds(xSpacing * 4, 100, 100, 100);
     stereoSlider.setBounds(xSpacing * 5, 100, 100, 100);
 
+    freqDampSlider.setBounds(450, 200, 150, 25);
+
 }
 
 void Karplus_finalAudioProcessorEditor::changeImpulse(impulseState impulse)
@@ -200,7 +210,7 @@ void Karplus_finalAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &dampningSlider)
     {
-        processor.globalSettings.dampning = dampningSlider.getValue();
+        processor.globalSettings.dampning = 10.01f - dampningSlider.getValue();
     }
     else if (slider == &stereoSlider)
     {
@@ -209,6 +219,10 @@ void Karplus_finalAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
     else if (slider == &impulseFilterSlider)
     {
         processor.globalSettings.impulseFilt = impulseFilterSlider.getValue();
+    }
+    else if (slider == &freqDampSlider)
+    {
+        processor.globalSettings.freqDamp = freqDampSlider.getValue();
     }
 
 }
