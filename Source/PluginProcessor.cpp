@@ -22,27 +22,57 @@ Karplus_finalAudioProcessor::Karplus_finalAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    parameters(*this,nullptr)
+    //feeding my audioprocessorValueTree tree all the relevant UI values before my constructor
+    parameters(*this, nullptr, juce::Identifier("easyNoise"),
+        {
+            std::make_unique<juce::AudioParameterFloat>(DAMP_ID,     // parameterID
+                                                        DAMP_NAME,   // parameter name
+                                                         0.01f,              // minimum value
+                                                         10.0f,              // maximum value
+                                                         5.0f),             // default value
+            std::make_unique<juce::AudioParameterFloat>(STEREO_ID,      // parameterID
+                                                        STEREO_NAME,    // parameter name
+                                                         1.0f,
+                                                         1.1f,
+                                                         1.0f),             // default value
+            std::make_unique<juce::AudioParameterFloat>(NOISEFILT_ID,      // parameterID
+                                                        NOISEFILT_NAME,    // parameter name
+                                                         200.0f,
+                                                         15000.0f,
+                                                         500.0f),             // default value
+            std::make_unique<juce::AudioParameterFloat>(FREQDAMP_ID,      // parameterID
+                                                      FREQDAMP_NAME,    // parameter name
+                                                         0.1f,
+                                                         0.99f,
+                                                         0.4f),             // default value
+            std::make_unique<juce::AudioParameterBool>(PICK_ID,      // parameterID
+                                                       PICK_NAME,     // parameter name
+                                                       false),              // default value
+            std::make_unique<juce::AudioParameterBool>(FINGER_ID,      // parameterID
+                                                       FINGER_NAME,     // parameter name
+                                                       false),
+            std::make_unique<juce::AudioParameterBool>(STICK_ID,      // parameterID
+                                                       STICK_NAME,     // parameter name
+                                                       true),
+
+        })
 #endif
 {
-    NormalisableRange<float> dampRange(0.01f, 10.0f);
-    NormalisableRange<float> steroRange(1.0f, 1.3f);
-    NormalisableRange<float> impRange(200.0f, 15000.0f);
-    NormalisableRange<float> freqDampRange(0.1f, 0.99f);
+    //setting the pointers in my settings object to the relevent controlls  
+    globalSettings.dampPointer = parameters.getRawParameterValue(DAMP_ID);
+    globalSettings.stereoPointer = parameters.getRawParameterValue(STEREO_ID);
+    globalSettings.impulseFiltPointer = parameters.getRawParameterValue(NOISEFILT_ID);
+    globalSettings.freqDampPointer = parameters.getRawParameterValue(FREQDAMP_ID);
 
-
-    parameters.createAndAddParameter(DAMP_ID, DAMP_NAME, DAMP_NAME, dampRange, 5.0f, nullptr, nullptr);
-    parameters.createAndAddParameter(STEREO_ID, STEREO_NAME, STEREO_NAME, steroRange, 1.0f, nullptr, nullptr);
-    parameters.createAndAddParameter(IMP_ID, IMP_NAME, IMP_NAME, impRange, 200.0f, nullptr, nullptr);
-    parameters.createAndAddParameter(FREQDAMP_ID, FREQDAMP_NAME, FREQDAMP_NAME, freqDampRange, 0.4f, nullptr, nullptr);
-
-
-    parameters.state = ValueTree("savedParams");
+    globalSettings.pickPointer = parameters.getRawParameterValue(PICK_ID);
+    globalSettings.fingerPointer = parameters.getRawParameterValue(FINGER_ID);
+    globalSettings.stickPointer = parameters.getRawParameterValue(STICK_ID);
 
     synth.clearVoices();
-
+    //giving my synth 8 voices
     for (int i = 0; i < 8; ++i)
     {
+        //sending reference to my settings so each voice can access the synth settings
         synth.addVoice(new KarplusVoice(&globalSettings));   // These voices will play our custom sine-wave sounds..
     }
 
@@ -119,8 +149,7 @@ void Karplus_finalAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void Karplus_finalAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+
     synth.setCurrentPlaybackSampleRate(sampleRate);
 
 }
@@ -161,31 +190,12 @@ void Karplus_finalAudioProcessor::processBlock (AudioBuffer<float>& buffer, Midi
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    //clearing noise for good
+    //for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    //    buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-
+    //method for rendering audio in each of my voices
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples()); // [5]
-
-
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
 }
 
 //==============================================================================
@@ -196,33 +206,27 @@ bool Karplus_finalAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* Karplus_finalAudioProcessor::createEditor()
 {
-    return new Karplus_finalAudioProcessorEditor (*this);
+    return new Karplus_finalAudioProcessorEditor (*this,parameters);
 }
 
 //==============================================================================
 void Karplus_finalAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    std::unique_ptr <juce::XmlElement> xmlState(parameters.state.createXml());
-    copyXmlToBinary(*xmlState, destData);
-  
+    //sending the values of my audioProcessorValueTreeState to be stored as an XML File
+    juce::ValueTree state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 
 }
 
 void Karplus_finalAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    std::unique_ptr<XmlElement> theParams(getXmlFromBinary(data, sizeInBytes));
-    if (theParams != nullptr)
-    {
-        if (theParams->hasTagName(parameters.state.getType()))
-        {
-            parameters.state = ValueTree::fromXml(*theParams);
-        }
-    }
+    //setting my AudioProcessorValueTreeState to the XML File Stored in Memory
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================
@@ -232,25 +236,4 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new Karplus_finalAudioProcessor();
 }
 
-//void Karplus_finalAudioProcessor::readAudioFile(AudioSampleBuffer& buffer, const void* data, size_t sizeBytes)
-//{
-//    WavAudioFormat wavFormat;
-//    std::unique_ptr<AudioFormatReader> reader(wavFormat.createReaderFor(new MemoryInputStream(data, sizeBytes, false), true));
-//    if (reader.get() != nullptr)
-//    {
-//        buffer.setSize(reader->numChannels, reader->lengthInSamples);
-//        reader->read(&buffer, 0, reader->lengthInSamples, 0, true, true);
-//    }
-//    // reader is automatically deleted by using uique_ptr
-//}
-
-
-//void Karplus_finalAudioProcessor::readAudioFile(AudioSampleBuffer& buffer, const void* file, size_t fileSize)
-//{
-//    MemoryInputStream inputStream(file, fileSize, false);
-//    WavAudioFormat wavFormat;
-//    AudioFormatReader* reader = wavFormat.createReaderFor(&inputStream, false);
-//    buffer.setSize(reader->numChannels, reader->lengthInSamples);
-//    reader->read(&buffer, 0, reader->lengthInSamples, 0, true, true);
-//}
 

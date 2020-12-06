@@ -18,24 +18,27 @@ class myDelay
 {
 public:
 
-    float delayArray[44100];
-
-    int rptr{ 0 };
-    int wptr{ 0 };
-    int delaySize;
-
     myDelay();
-
+    //function for setting up the delay
     void setDelay(int M);
 
-    float b{0.3}, a{ 1 - b }, z{ 0 }, f{ 1 };
-
-    float process(float in,float damp,float freqDamp);
-
+    //function for feeding signals into my delay line
     float delayLine(float sig,float damp,float freqDamp);
 
-    bool killDelay{ false };
-
+    //frequency of my delay
     float freq;
+
+private:
+    //my delay array 
+    float delayArray[44100];
+    //read and write pointer for reading and writing from the circular array buffer.
+    //delay size for determing size (frequency) of delay
+    int rptr{ 0 }, wptr{ 0 }, delaySize;
+    //all variables for use within my onePole Filter
+    float b{ 0.3 }, a{ 1 - b }, z{ 0 };
+    //function for adding one pole filtering to the signal
+    float process(float in, float damp, float freqDamp);
+
+
 
 };

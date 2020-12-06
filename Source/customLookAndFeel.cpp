@@ -12,16 +12,15 @@
 
 customLookAndFeel::customLookAndFeel()
 {
-    setColour(Slider::rotarySliderOutlineColourId, Colours::green);
+    //loading my image in
     setColour(Slider::thumbColourId, Colours::black);
-    setColour(Slider::rotarySliderFillColourId, Colours::blue);
 
     myDial = ImageFileFormat::loadFrom(BinaryData::dial_png, BinaryData::dial_pngSize);
 
 }
 
 void customLookAndFeel::drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos,const float rotaryStartAngle, const float rotaryEndAngle, Slider& slider){
-
+    //seting radius of circle as the minum of width and height
     int radius = jmin(width, height);
     int centreX = int(width / 2);
     int centreY = int(height / 2);
@@ -45,8 +44,7 @@ void customLookAndFeel::drawImageButton(Graphics& g, Image* image,
     float imageOpacity,
     ImageButton& button)
 {
-    //if (!button.isEnabled())
-    //    imageOpacity *= 0.3f;
+
 
     AffineTransform t = RectanglePlacement(RectanglePlacement::stretchToFit)
         .getTransformToFit(image->getBounds().toFloat(),
@@ -73,7 +71,6 @@ void customLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width, i
 {
     if (slider.isBar())
     {
-        //g.setColour(slider.findColour(Slider::trackColourId));
         g.setColour(juce::Colour(122, 201, 67));
         g.fillRect(slider.isHorizontal() ? Rectangle<float>(static_cast<float> (x), y + 0.5f, sliderPos - x, height - 1.0f)
             : Rectangle<float>(x + 0.5f, sliderPos, width - 1.0f, y + (height - sliderPos)));
@@ -130,8 +127,7 @@ void customLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width, i
 
         if (!isTwoVal)
         {
-            g.setColour(slider.findColour(Slider::thumbColourId));
-            //g.fillEllipse(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre(isThreeVal ? thumbPoint : maxPoint));
+            g.setColour(Colours::black);
 
             g.fillRect(Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth)).withCentre(isThreeVal ? thumbPoint : maxPoint));
 
@@ -140,7 +136,7 @@ void customLookAndFeel::drawLinearSlider(Graphics& g, int x, int y, int width, i
         if (isTwoVal || isThreeVal)
         {
             auto sr = jmin(trackWidth, (slider.isHorizontal() ? height : width) * 0.4f);
-            auto pointerColour = slider.findColour(Slider::thumbColourId);
+            auto pointerColour = Colours::black;
 
             if (slider.isHorizontal())
             {

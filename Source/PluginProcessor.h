@@ -60,8 +60,9 @@ public:
 
     //void readAudioFile(AudioSampleBuffer& buffer, const void* file, size_t fileSize);
 
+    //my Settings object for storing all synth settings
     Settings globalSettings;
-
+    //AudioProcessorValueTreeState for storing parameters
     juce::AudioProcessorValueTreeState parameters;
 
 
@@ -69,8 +70,10 @@ public:
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Karplus_finalAudioProcessor)
-
+    //synth Class
     Synthesiser synth;
+
+
 
 
 

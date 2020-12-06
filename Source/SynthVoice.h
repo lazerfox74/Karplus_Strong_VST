@@ -34,25 +34,25 @@ public:
     void renderNextBlock(AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 
     using SynthesiserVoice::renderNextBlock;
-
+    //creating a Settings pointer so it can be used to point to my global settings object
     Settings* voiceSettings;
 
     
 private:
-
-    float level{ 1 }, delaySig{ 0.0 }, liveSample{ 0.0 }, output{1};
-    double tailOff{ 0.0 };
+    //level for scaling the volume of my output, liveSample for playback of my Impulse sample and Output for being the output of combined impulse and delay
+    float level{ 0.5 }, liveSample{ 0.0 }, output{1};
+    //postion used as incrementer for impulse sample
     int position{0};
+    //play used for logic for playing impulse
     bool play{ false };
-
+    //arry of delay objects for left and right channel
     myDelay voiceDelay[2];
-
+    //filter for filtering my impulse sample
     IIRFilter filter;
-
+    //variable for setting filter frequency
     float filterFreq{400};
-    bool active;
 
-    int StartSampleRate{0};
+    //int StartSampleRate{0};
 
 
 };

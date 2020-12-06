@@ -12,15 +12,7 @@
 
 Settings::Settings()
 {   
-    //reading wav impulse files into my audiosamplebuffers
-    //MemoryInputStream inputStream(BinaryData::finger_wav, BinaryData::finger_wavSize, false);
-    //WavAudioFormat wavFormat;
-    //std::unique_ptr<AudioFormatReader> reader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::finger_wav,BinaryData::finger_wavSize, false), true));
-    //pickBuffer.setSize(reader->numChannels, reader->lengthInSamples);
-    //reader->read(&pickBuffer, 0, reader->lengthInSamples, 0, true, true);
-
-
-    //MemoryInputStream inputStream(BinaryData::finger_wav, BinaryData::finger_wavSize, false);
+    //filing my audioSampleBuffers with the relevent impulse samples
     WavAudioFormat wavFormat;
     std::unique_ptr<AudioFormatReader> reader(wavFormat.createReaderFor(new MemoryInputStream(BinaryData::pick_wav,BinaryData::pick_wavSize, false), true));
     pickBuffer.setSize(reader->numChannels, reader->lengthInSamples);

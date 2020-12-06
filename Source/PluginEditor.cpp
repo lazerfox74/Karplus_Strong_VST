@@ -12,19 +12,12 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_finalAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_finalAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor (&p), processor (p), valueTreeState(vts)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (600, 225);
-
-    dampAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, DAMP_ID, dampningSlider);
-    stereoAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, STEREO_ID, stereoSlider);
-    impAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, IMP_ID, impulseFilterSlider);
-    freqDampAttatch = new AudioProcessorValueTreeState::SliderAttachment(processor.parameters, FREQDAMP_ID, freqDampSlider);
-
-
 
     //setting up ui componenets
     Image fingerNP = ImageCache::getFromMemory(BinaryData::finger_png, BinaryData::finger_pngSize);
@@ -38,23 +31,19 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
 
     Image press = ImageCache::getFromMemory(BinaryData::press_png, BinaryData::press_pngSize);
 
+    //setting up my image buttons
+    pickAttatch.reset(new ButtonAttachment(valueTreeState, PICK_ID, pickB));
+    fingerAttatch.reset(new ButtonAttachment(valueTreeState, FINGER_ID, fingerB));
+    stickAttatch.reset(new ButtonAttachment(valueTreeState, STICK_ID, stickB));
+    
     pickB.setLookAndFeel(&otherLookAndFeel);
     fingerB.setLookAndFeel(&otherLookAndFeel);
     stickB.setLookAndFeel(&otherLookAndFeel);
-
-    freqDampSlider.setLookAndFeel(&otherLookAndFeel);
-    freqDampSlider.setRange(0.1, 0.99);
-    freqDampSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
-    freqDampSlider.addListener(this);
-    addAndMakeVisible(freqDampSlider);
-    freqDampSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-
 
     pickB.setImages(false, true, true, pickNP, 1.0f, {},press , 1.0f, {}, pickP, 1.0f, {});
     addAndMakeVisible(pickB);
     pickB.onClick = [this] { changeImpulse(pick); };
     pickB.setClickingTogglesState(true);
-
 
     fingerB.setImages(false, true, true, fingerNP, 1.0f, {}, press, 1.0f, {}, fingerP, 1.0f, {});
     addAndMakeVisible(fingerB);
@@ -71,42 +60,35 @@ Karplus_finalAudioProcessorEditor::Karplus_finalAudioProcessorEditor (Karplus_fi
     fingerB.setRadioGroupId(5);
     stickB.setRadioGroupId(5);
 
+    //setting up my sliders
 
+    freqDampAttatch.reset(new SliderAttachment(valueTreeState, FREQDAMP_ID, freqDampSlider));
+    freqDampSlider.setLookAndFeel(&otherLookAndFeel);
+    freqDampSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
+    freqDampSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    addAndMakeVisible(freqDampSlider);
+
+    noiseFiltAttatch.reset(new SliderAttachment(valueTreeState, NOISEFILT_ID, impulseFilterSlider));
     impulseFilterSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-    dampningSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-    stereoSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
-
     impulseFilterSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    dampningSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    stereoSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-
-
     impulseFilterSlider.setLookAndFeel(&otherLookAndFeel);
-    dampningSlider.setLookAndFeel(&otherLookAndFeel);
-    stereoSlider.setLookAndFeel(&otherLookAndFeel);
-
-    dampningSlider.setRange(0.01f, 10.0f);
-    //dampningSlider.setSkewFactorFromMidPoint(f);
-    dampningSlider.addListener(this);
-
-    stereoSlider.setRange(1,1.3);
-    stereoSlider.setSkewFactorFromMidPoint(1.05);
-    stereoSlider.addListener(this);
-
-    impulseFilterSlider.setRange(200, 15000);
-    impulseFilterSlider.setSkewFactorFromMidPoint(5000);
-    impulseFilterSlider.addListener(this);
-
     addAndMakeVisible(impulseFilterSlider);
+
+    dampAttatch.reset(new SliderAttachment(valueTreeState, DAMP_ID, dampningSlider));
+    dampningSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    dampningSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    dampningSlider.setLookAndFeel(&otherLookAndFeel);
     addAndMakeVisible(dampningSlider);
+
+    stereoAttatch.reset(new SliderAttachment(valueTreeState, STEREO_ID, stereoSlider));
+    stereoSlider.setSliderStyle(Slider::SliderStyle::RotaryVerticalDrag);
+    stereoSlider.setTextBoxStyle(Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    stereoSlider.setLookAndFeel(&otherLookAndFeel);
+    stereoSlider.setSkewFactorFromMidPoint(1.05);
     addAndMakeVisible(stereoSlider);
 
-    //impulseFilterSlider.setValue(processor.globalSettings.impulseFilt);
-    //stereoSlider.setValue(processor.globalSettings.stereo);
-    //dampningSlider.setValue(processor.globalSettings.dampning);
 
-
-
+    //background image
     backGround = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
 
 
@@ -120,35 +102,15 @@ Karplus_finalAudioProcessorEditor::~Karplus_finalAudioProcessorEditor()
 //==============================================================================
 void Karplus_finalAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.setColour(Colours::white);
 
     g.fillAll (Colours::white);
 
-    g.setColour (Colours::black);
-    g.setFont (15.0f);
-
     g.drawImageAt(backGround, 0, 0);
-    //g.drawFittedText ("Exitor", getLocalBounds().removeFromTop(50), Justification::centred, 1);
 }
 
 void Karplus_finalAudioProcessorEditor::resized()
 {
-
-    //auto r = getLocalBounds();
-    //r.removeFromTop(200);
-    //auto topLeftSectoin = r.removeFromLeft(r.getWidth() / 2);
-    //auto divisor = topLeftSectoin.getWidth() / 3;
-
-    //pickB.setBounds(topLeftSectoin.removeFromRight(divisor));
-    //fingerB.setBounds(topLeftSectoin.removeFromRight(divisor));
-    //stickB.setBounds(topLeftSectoin);
-    //
-    //impulseFilterSlider.setBounds(r.removeFromLeft(divisor));
-    //dampningSlider.setBounds(r.removeFromLeft(divisor));
-    //stereoSlider.setBounds(r);
-
-    //backGround.setBounds(0, 0, 600, 300);
 
     int xSpacing = getWidth()/6;
 
@@ -159,7 +121,6 @@ void Karplus_finalAudioProcessorEditor::resized()
     impulseFilterSlider.setBounds(xSpacing * 3, 100, 100, 100);
     dampningSlider.setBounds(xSpacing * 4, 100, 100, 100);
     stereoSlider.setBounds(xSpacing * 5, 100, 100, 100);
-
     freqDampSlider.setBounds(450, 200, 150, 25);
 
 }
@@ -187,7 +148,6 @@ void Karplus_finalAudioProcessorEditor::changeImpulse(impulseState impulse)
         fingerB.setEnabled(false);
          
         processor.globalSettings.impulse = 1;
-        //processor.ValueTree::setProperty(BUTTON_ID, 0.0f);
         break;
 
     case stick:
@@ -204,26 +164,5 @@ void Karplus_finalAudioProcessorEditor::changeImpulse(impulseState impulse)
         break;
 
     }
-}
-
-void Karplus_finalAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
-{
-    if (slider == &dampningSlider)
-    {
-        processor.globalSettings.dampning = 10.01f - dampningSlider.getValue();
-    }
-    else if (slider == &stereoSlider)
-    {
-        processor.globalSettings.stereo = stereoSlider.getValue();
-    }
-    else if (slider == &impulseFilterSlider)
-    {
-        processor.globalSettings.impulseFilt = impulseFilterSlider.getValue();
-    }
-    else if (slider == &freqDampSlider)
-    {
-        processor.globalSettings.freqDamp = freqDampSlider.getValue();
-    }
-
 }
 
